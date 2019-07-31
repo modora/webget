@@ -1,0 +1,1 @@
+from .__about__ import __title__, __author__, __version__

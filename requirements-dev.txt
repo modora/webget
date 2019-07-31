@@ -1,0 +1,7 @@
+coverage
+pylint
+black
+rope
+mypy
+pyfakefs
+doc8
