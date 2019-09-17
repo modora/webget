@@ -18,13 +18,15 @@ class SavePagePipeline:
 		# https://example.com/foo/bar.php
 		# 	domain = example.com
 		# 	url_path = foo/bar.php.html
-		#	save_path = ${DOWNLOAD_DIR}/example.com/foo/bar.html
+		#	save_path = ${DOWNLOAD_DIR}/example.com/foo/bar.php.html
 		# https://subdomain.example.com/
 		# 	domain = subdomain.example.com
 		#	url_path = index.html
 		#	save_path = ${DOWNLOAD_DIR}/subdomain.example.com/index.html
 		domain = urlparse(url).netloc
-		url_path = (urlparse(url).path[1:] or 'index') + '.html'
+		url_path = (urlparse(url).path[1:] or 'index')
+		if not url_path.endswith('.html'):
+			url_path += '.html'
 		return (domain, url_path)
 
 	@staticmethod
