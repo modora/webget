@@ -18,15 +18,9 @@ RUN apt-get update \
     && pip install --upgrade pip
 
 # ------------------------------------- COMMANDS -----------------------
-# Copy requirements.txt (if found) to a temp locaition so we can install it. Also
-# copy "noop.txt" so the COPY instruction does not fail if no requirements.txt exists.
-COPY requirements*.txt pip-tmp/
-
-RUN if [ -f "pip-tmp/requirements-dev.txt" ]; then pip install -r pip-tmp/requirements-dev.txt; fi
-RUN if [ -f "pip-tmp/requirements.txt" ]; then pip install -r pip-tmp/requirements.txt; fi
-
-# Install firefox webdriver
+# Install webdrivers and browsers
 ENV GECKO_DRIVER_VERSION='v0.24.0'
+RUN apt-get install -y firefox-esr chromium chromium-driver
 RUN wget https://github.com/mozilla/geckodriver/releases/download/$GECKO_DRIVER_VERSION/geckodriver-$GECKO_DRIVER_VERSION-linux64.tar.gz \
         -O geckodriver-$GECKO_DRIVER_VERSION-linux64.tar.gz \
         --quiet \
@@ -34,6 +28,12 @@ RUN wget https://github.com/mozilla/geckodriver/releases/download/$GECKO_DRIVER_
     && chmod +x geckodriver \
     && mv geckodriver /usr/local/bin/
 
+# Copy requirements.txt (if found) to a temp locaition so we can install it. Also
+# copy "noop.txt" so the COPY instruction does not fail if no requirements.txt exists.
+COPY requirements*.txt pip-tmp/
+
+RUN if [ -f "pip-tmp/requirements-dev.txt" ]; then pip install -r pip-tmp/requirements-dev.txt; fi
+RUN if [ -f "pip-tmp/requirements.txt" ]; then pip install -r pip-tmp/requirements.txt; fi
 # ------------------------------------ END -----------------------------
 # Clean up
 RUN apt-get autoremove -y \
